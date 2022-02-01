@@ -143,4 +143,7 @@
 
 .field > input {
   height: 40px;
+  border: none;
+  background: #eee;
+  padding: 0 10px;
 }

@@ -1,15 +1,16 @@
 import Head from "next/head";
 
 import styles from "../styles/Home.module.css";
-import useIdentity from "../hooks/useIdentity";
+import useIdentity, { BasicProfile } from "../hooks/useIdentity";
 import { useState } from "react";
 
 const Home = () => {
   const { loading, profile, error, read, write } = useIdentity();
-  const [profileData, setProfileData] = useState<any>(null);
+  const [profileData, setProfileData] = useState<BasicProfile>(null);
 
   const readProfile = async () => {
     const { error, data } = await read();
+    console.log(`Error`, error);
     if (error === undefined) {
       setProfileData(data);
     }
@@ -17,6 +18,7 @@ const Home = () => {
 
   const updateProfile = async () => {
     const { error, data } = await write(profileData);
+    console.log(`Error`, error);
     if (error === undefined) {
       setProfileData(data);
     }
@@ -43,7 +45,8 @@ const Home = () => {
           {loading.read && <p className={styles.description}>Reading...</p>}
           {loading.write && <p className={styles.description}>Updating...</p>}
 
-          <p className={styles.description}>ERROR: {JSON.stringify(error)}</p>
+          <pre>{JSON.stringify(error)}</pre>
+          <pre>{JSON.stringify(profile)}</pre>
 
           {profile !== null && (
             <div className={styles.form}>
@@ -63,11 +66,59 @@ const Home = () => {
                   type="text"
                   value={profileData?.bio}
                   onChange={(e) =>
-                    setProfileData({ ...profileData, bio: e.target.value })
+                    setProfileData({
+                      ...profileData,
+                      bio: e.target.value,
+                    })
                   }
                 />
               </div>
-              <button className={styles.button} onClick={updateProfile}>
+
+              <div className={styles.field}>
+                <label htmlFor="">Location</label>
+                <input
+                  type="text"
+                  value={profileData?.homeLocation}
+                  onChange={(e) =>
+                    setProfileData({
+                      ...profileData,
+                      homeLocation: e.target.value,
+                    })
+                  }
+                />
+              </div>
+              <div className={styles.field}>
+                <label htmlFor="">Residence Country</label>
+                <input
+                  type="text"
+                  value={profileData?.residenceCountry}
+                  onChange={(e) =>
+                    setProfileData({
+                      ...profileData,
+                      residenceCountry: e.target.value,
+                    })
+                  }
+                />
+              </div>
+              <div className={styles.field}>
+                <label htmlFor="">Image</label>
+                <img src={profileData?.image} alt="Image" />
+                <input
+                  type="text"
+                  value={profileData?.image}
+                  onChange={(e) =>
+                    setProfileData({
+                      ...profileData,
+                      image: e.target.value,
+                    })
+                  }
+                />
+              </div>
+              <button
+                className={styles.button}
+                onClick={updateProfile}
+                style={{ width: "100%" }}
+              >
                 Update Profile
               </button>
             </div>

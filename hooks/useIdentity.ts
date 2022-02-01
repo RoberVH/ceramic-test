@@ -16,13 +16,20 @@ declare global {
   }
 }
 
-type ProfileType = {
+export type BasicProfile = {
   name: string;
+  image: string;
   bio: string;
+  emoji: string;
+  birthDate: string;
+  url: string;
+  gender: string;
+  homeLocation: string;
+  residenceCountry: string;
 } | null;
 
 const useIdentity = () => {
-  const [profile, setProfile] = useState<ProfileType>(null);
+  const [profile, setProfile] = useState<BasicProfile>(null);
   const [loading, setLoading] = useState({
     read: false,
     write: false,
@@ -39,97 +46,104 @@ const useIdentity = () => {
     return addresses;
   }
 
+  const read = async (): Promise<{
+    error?: any;
+    data?: BasicProfile;
+  }> => {
+    const [address] = await connect();
+    const ceramic = new CeramicClient(API_URL);
+    const idx = new IDX({ ceramic });
+
+    setLoading({ ...loading, read: true });
+
+    try {
+      const data: BasicProfile = await idx.get(
+        "basicProfile",
+        `${address}@eip155:1`
+      );
+
+      setLoading({ ...loading, read: false });
+      setError({ ...error, read: false });
+
+      setProfile(data);
+
+      return {
+        data,
+      };
+    } catch (err) {
+      setProfile(null);
+
+      const { error, data } = await write({
+        name: address,
+      });
+
+      return {
+        error,
+        data,
+      };
+    }
+  };
+
+  const write = async (
+    newUserdata: any
+  ): Promise<{
+    error?: any;
+    data?: BasicProfile;
+  }> => {
+    const [address] = await connect();
+    const ceramic = new CeramicClient(API_URL);
+    const idx = new IDX({ ceramic });
+
+    setLoading({ ...loading, write: true });
+
+    const threeIdConnect = new ThreeIdConnect();
+    const provider = new EthereumAuthProvider(window.ethereum, address);
+
+    await threeIdConnect.connect(provider);
+
+    const did = new DID({
+      provider: await threeIdConnect.getDidProvider(),
+      resolver: {
+        ...KeyDidResolver.getResolver(),
+        ...ThreeIdResolver.getResolver(ceramic),
+      },
+    });
+
+    ceramic.setDID(did);
+
+    try {
+      await ceramic?.did?.authenticate();
+      const a = await idx.set("basicProfile", newUserdata);
+
+      console.log(`save`, a);
+
+      setLoading({ ...loading, write: false });
+      setError({ ...error, write: false });
+
+      setProfile(newUserdata);
+
+      return {
+        data: newUserdata,
+      };
+    } catch (err) {
+      setLoading({ ...loading, write: false });
+      setError({ ...error, read: true });
+
+      setProfile(null);
+
+      return {
+        error: err,
+        data: null,
+      };
+    }
+  };
+
   return {
     loading,
     profile,
     error,
-    read: async (): Promise<{
-      error?: any;
-      data?: ProfileType;
-    }> => {
-      const [address] = await connect();
-      const ceramic = new CeramicClient(API_URL);
-      const idx = new IDX({ ceramic });
-
-      console.log(`READ PROFILE`);
-
-      setLoading({ ...loading, read: true });
-
-      try {
-        const data: ProfileType = await idx.get(
-          "basicProfile",
-          `${address}@eip155:1`
-        );
-
-        setLoading({ ...loading, read: false });
-        setError({ ...error, read: false });
-
-        setProfile(data);
-
-        return {
-          data,
-        };
-      } catch (err) {
-        setLoading({ ...loading, read: false });
-        setError({ ...error, read: true });
-
-        setProfile(null);
-
-        return {
-          error: err,
-        };
-      }
-    },
-    write: async (
-      newUserdata: any
-    ): Promise<{
-      error?: any;
-      data?: ProfileType;
-    }> => {
-      const [address] = await connect();
-      const ceramic = new CeramicClient(API_URL);
-      const idx = new IDX({ ceramic });
-
-      setLoading({ ...loading, write: true });
-
-      const threeIdConnect = new ThreeIdConnect();
-      const provider = new EthereumAuthProvider(window.ethereum, address);
-
-      await threeIdConnect.connect(provider);
-
-      const did = new DID({
-        provider: await threeIdConnect.getDidProvider(),
-        resolver: {
-          ...KeyDidResolver.getResolver(),
-          ...ThreeIdResolver.getResolver(ceramic),
-        },
-      });
-
-      ceramic.setDID(did);
-
-      try {
-        await ceramic?.did?.authenticate();
-        await idx.set("basicProfile", newUserdata);
-
-        setLoading({ ...loading, write: false });
-        setError({ ...error, write: false });
-
-        setProfile(newUserdata);
-
-        return {
-          data: newUserdata,
-        };
-      } catch (err) {
-        setLoading({ ...loading, write: false });
-        setError({ ...error, read: true });
-
-        setProfile(null);
-
-        return {
-          error: err,
-        };
-      }
-    },
+    read,
+    write,
   };
 };
 

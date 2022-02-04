@@ -1,8 +1,24 @@
+import { useState } from "react";
 import Head from "next/head";
 
 import styles from "../styles/Home.module.css";
-import useIdentity, { BasicProfile } from "../hooks/useIdentity";
-import { useState } from "react";
+import useIdentity from "../hooks/useIdentity";
+import type { BasicProfile } from "@ceramicstudio/idx-constants";
+
+// BasicProfile = {
+//   name?: string;
+//   image?: ImageSources;
+//   description?: string;
+//   emoji?: string;
+//   background?: ImageSources;
+//   birthDate?: string;
+//   url?: string;
+//   gender?: string;
+//   homeLocation?: string;
+//   residenceCountry?: string;
+//   nationalities?: Array<string>;
+//   affiliations?: Array<string>;
+// };
 
 const Home = () => {
   const { loading, profile, error, read, write } = useIdentity();
@@ -10,7 +26,6 @@ const Home = () => {
 
   const readProfile = async () => {
     const { error, data } = await read();
-    console.log(`Error`, error);
     if (error === undefined) {
       setProfileData(data);
     }
@@ -18,7 +33,6 @@ const Home = () => {
 
   const updateProfile = async () => {
     const { error, data } = await write(profileData);
-    console.log(`Error`, error);
     if (error === undefined) {
       setProfileData(data);
     }
@@ -64,16 +78,28 @@ const Home = () => {
                 <label htmlFor="">Bio</label>
                 <input
                   type="text"
-                  value={profileData?.bio}
+                  value={profileData?.description}
                   onChange={(e) =>
                     setProfileData({
                       ...profileData,
-                      bio: e.target.value,
+                      description: e.target.value,
                     })
                   }
                 />
               </div>
-
+              <div className={styles.field}>
+                <label htmlFor="">Gender</label>
+                <input
+                  type="text"
+                  value={profileData?.gender}
+                  onChange={(e) =>
+                    setProfileData({
+                      ...profileData,
+                      gender: e.target.value,
+                    })
+                  }
+                />
+              </div>
               <div className={styles.field}>
                 <label htmlFor="">Location</label>
                 <input
@@ -102,14 +128,20 @@ const Home = () => {
               </div>
               <div className={styles.field}>
                 <label htmlFor="">Image</label>
-                <img src={profileData?.image} alt="Image" />
+                <img src={profileData?.image?.original?.src} alt="Image" />
                 <input
                   type="text"
-                  value={profileData?.image}
+                  value={profileData?.image?.original?.src}
                   onChange={(e) =>
                     setProfileData({
                       ...profileData,
-                      image: e.target.value,
+                      image: {
+                        ...profileData?.image,
+                        original: {
+                          ...profileData?.image.original,
+                          src: e.target.value,
+                        },
+                      },
                     })
                   }
                 />

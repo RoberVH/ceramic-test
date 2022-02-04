@@ -1,5 +1,6 @@
 import { EthereumAuthProvider, ThreeIdConnect } from "@3id/connect";
-import { IDX } from "@ceramicstudio/idx";
+import { IDX, getLegacy3BoxProfileAsBasicProfile } from "@ceramicstudio/idx";
+import type { BasicProfile } from "@ceramicstudio/idx-constants";
 
 import { CeramicClient } from "@ceramicnetwork/http-client";
 import ThreeIdResolver from "@ceramicnetwork/3id-did-resolver";
@@ -15,18 +16,6 @@ declare global {
     ethereum: any;
   }
 }
-
-export type BasicProfile = {
-  name: string;
-  image: string;
-  bio: string;
-  emoji: string;
-  birthDate: string;
-  url: string;
-  gender: string;
-  homeLocation: string;
-  residenceCountry: string;
-} | null;
 
 const useIdentity = () => {
   const [profile, setProfile] = useState<BasicProfile>(null);
@@ -46,6 +35,14 @@ const useIdentity = () => {
     return addresses;
   }
 
+  const read3boxProfile = async () => {
+    const [address] = await connect();
+
+    const profile = getLegacy3BoxProfileAsBasicProfile(address);
+
+    console.log(profile);
+  };
+
   const read = async (): Promise<{
     error?: any;
     data?: BasicProfile;
@@ -61,6 +58,8 @@ const useIdentity = () => {
         "basicProfile",
         `${address}@eip155:1`
       );
+
+      console.log(`READ PROFILE`, data);
 
       setLoading({ ...loading, read: false });
       setError({ ...error, read: false });
@@ -109,13 +108,14 @@ const useIdentity = () => {
       },
     });
 
-    ceramic.setDID(did);
-
     try {
-      await ceramic?.did?.authenticate();
+      ceramic.setDID(did);
+
+      const auth = await did?.authenticate();
       const a = await idx.set("basicProfile", newUserdata);
 
-      console.log(`save`, a);
+      console.log(`SET AUTH`, auth);
+      console.log(`SET SAVE`, a, newUserdata);
 
       setLoading({ ...loading, write: false });
       setError({ ...error, write: false });

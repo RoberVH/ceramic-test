@@ -1,6 +1,6 @@
-# Ceramic Profile (investigation)
+# Ceramic Profile
 
-This is a simple demo of creating, reading and updating your creamic profiole.
+This is a simple demo of creating, reading and updating your creamic profile.
 
 More to do:
 
@@ -8,4 +8,4 @@ More to do:
 - [ ] Add reducer to profile
 - [ ] Some metadata requires more validation before updating the profile.
 - [ ] Clean the state after the address changes
-- [ ] Research about the image
+- [ ] Research about the image upload

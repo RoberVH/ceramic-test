@@ -38,18 +38,18 @@ const useIdentity = () => {
   const read3boxProfile = async () => {
     const [address] = await connect();
 
-    const profile = getLegacy3BoxProfileAsBasicProfile(address);
+    const profile = await getLegacy3BoxProfileAsBasicProfile(address);
 
-    console.log(profile);
+    console.log(`profile`, profile);
   };
 
-  const read = async (): Promise<{
-    error?: any;
-    data?: BasicProfile;
-  }> => {
+  const read = async () => {
     const [address] = await connect();
     const ceramic = new CeramicClient(API_URL);
     const idx = new IDX({ ceramic });
+
+    // console.log(read3boxProfile());
+    // console.log(address);
 
     setLoading({ ...loading, read: true });
 
@@ -76,6 +76,8 @@ const useIdentity = () => {
         name: address,
       });
 
+      console.log(`ReadError`, err);
+
       return {
         error,
         data,
@@ -83,12 +85,7 @@ const useIdentity = () => {
     }
   };
 
-  const write = async (
-    newUserdata: any
-  ): Promise<{
-    error?: any;
-    data?: BasicProfile;
-  }> => {
+  const write = async (newUserdata: any) => {
     const [address] = await connect();
     const ceramic = new CeramicClient(API_URL);
     const idx = new IDX({ ceramic });
@@ -130,6 +127,8 @@ const useIdentity = () => {
       setError({ ...error, read: true });
 
       setProfile(null);
+
+      console.log(`WriteError`, err);
 
       return {
         error: err,

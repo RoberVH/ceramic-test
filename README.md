@@ -1,4 +1,4 @@
-# Ceramic Profile
+# Ceramic Profile (investigation)
 
 This is a simple demo of creating, reading and updating your creamic profiole.
 

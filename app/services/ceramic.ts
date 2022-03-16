@@ -39,7 +39,9 @@ async function useCeramic() {
 
   ceramic.setDID(did);
 
-  return [idx, address, did];
+  await did?.authenticate();
+
+  return [idx, address];
 }
 
 export { BasicProfile, getLegacy3BoxProfileAsBasicProfile };

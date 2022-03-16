@@ -19,11 +19,15 @@ const Index = () => {
   const dummyUpdate = async () => {
     await updateUser({
       name: "Testing",
-      url: "www.google.pt",
-      emoji: "🐝",
       description: "My new description",
+      emoji: "🐝",
+      birthDate: "1986-02-22",
+      url: "www.google.pt",
+      gender: "Male",
       residenceCountry: "PT",
       homeLocation: "Porto",
+      nationalities: ["RO", "PL"],
+      affiliations: ["CCC", "DDD", "EEE"],
     });
   };
   return (

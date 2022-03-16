@@ -1,14 +1,14 @@
-import useCeramic from "../services/ceramic";
+import useCeramic, { BasicProfile } from "../services/ceramic";
 
-async function updateUser(payload) {
-  const [idx, _, did] = await useCeramic();
-
-  await did?.authenticate();
+async function updateUser(payload: BasicProfile) {
+  const [idx, _] = await useCeramic();
 
   try {
     await idx.set("basicProfile", payload);
+    console.log(`updateUser`, payload);
     return payload;
   } catch (err) {
+    console.log(`updateUser `, err);
     return err;
   }
 }

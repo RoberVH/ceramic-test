@@ -4,13 +4,20 @@ import useCeramic, {
 } from "../services/ceramic";
 
 async function fetch3boxProfile() {
-  const [_, address, __] = await useCeramic();
+  const [_, address] = await useCeramic();
 
-  const profile: BasicProfile = await getLegacy3BoxProfileAsBasicProfile(
-    address
-  );
+  try {
+    const profile: BasicProfile = await getLegacy3BoxProfileAsBasicProfile(
+      address
+    );
 
-  return profile;
+    console.log(`fetch3boxProfile`, profile);
+
+    return profile;
+  } catch (err) {
+    console.log(`fetchUser`, err);
+    return err;
+  }
 }
 
 export default fetch3boxProfile;

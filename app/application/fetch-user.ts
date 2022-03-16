@@ -1,14 +1,19 @@
 import useCeramic, { BasicProfile } from "../services/ceramic";
 
-async function ReadUser() {
-  const [idx, address, _] = await useCeramic();
+async function fetchUser() {
+  const [idx, address] = await useCeramic();
 
-  const profile: BasicProfile = await idx.get(
-    "basicProfile",
-    `${address}@eip155:1`
-  );
+  try {
+    const profile: BasicProfile = await idx.get(
+      "basicProfile",
+      `${address}@eip155:1`
+    );
 
-  return profile;
+    console.log(`fetchUser`, profile);
+    return profile;
+  } catch (err) {
+    console.log(`fetchUser`, err);
+  }
 }
 
-export default ReadUser;
+export default fetchUser;

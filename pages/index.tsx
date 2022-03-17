@@ -1,3 +1,4 @@
+import React from "react";
 import fetchUser from "../app/application/fetch-user";
 import fetch3boxProfile from "../app/application/fetch-3box-profile";
 import updateUser from "../app/application/update-user";
@@ -16,24 +17,68 @@ import updateUser from "../app/application/update-user";
 // affiliations?: Array<string>;
 
 const Index = () => {
+  const [image, setImage] = React.useState(null);
+  const [profile, setProfile] = React.useState(null);
+
   const dummyUpdate = async () => {
     await updateUser({
-      name: "Testing",
+      name: "Tiago",
       description: "My new description",
       emoji: "🐝",
       birthDate: "1986-02-22",
-      url: "www.google.pt",
+      url: "https://twitter.com/TiagoMoutinho12",
       gender: "Male",
       residenceCountry: "PT",
       homeLocation: "Porto",
       nationalities: ["RO", "PL"],
       affiliations: ["CCC", "DDD", "EEE"],
+      avatar: image,
     });
+
+    setProfile(null);
   };
+
+  const dummyRead = async () => {
+    const result = await fetchUser();
+    setProfile(result);
+  };
+
   return (
-    <div>
+    <div
+      style={{
+        padding: "15px",
+      }}
+    >
       <h1>Ceramic Profile</h1>
-      <button onClick={async () => await fetchUser()}>fetchUser</button>
+
+      <div
+        style={{
+          marginBottom: "20px",
+        }}
+      >
+        <h4>Set Image dummy to update</h4>
+        <input
+          type="text"
+          onChange={({ target: { value } }) => setImage(value)}
+        />
+      </div>
+
+      {profile ? (
+        <div
+          style={{
+            marginBottom: "20px",
+          }}
+        >
+          <img src={profile.avatar} alt="" height="100px" />
+          <h4>
+            {profile.name} <small>{profile.emoji}</small>
+          </h4>
+          <p>{profile.description}</p>
+          <p>{profile.url}</p>
+        </div>
+      ) : null}
+
+      <button onClick={async () => dummyRead()}>fetchUser</button>
       <button onClick={() => dummyUpdate()}>updateUser</button>
       <button onClick={async () => await fetch3boxProfile()}>
         fetch3boxProfile

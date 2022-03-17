@@ -4,7 +4,7 @@ import useCeramic, {
 } from "../services/ceramic";
 
 async function fetch3boxProfile() {
-  const [_, address] = await useCeramic();
+  const { address } = await useCeramic();
 
   try {
     const profile: BasicProfile = await getLegacy3BoxProfileAsBasicProfile(

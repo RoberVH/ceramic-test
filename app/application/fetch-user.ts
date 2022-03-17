@@ -1,7 +1,7 @@
 import useCeramic, { BasicProfile } from "../services/ceramic";
 
 async function fetchUser() {
-  const [idx, address] = await useCeramic();
+  const { idx, address } = await useCeramic();
 
   try {
     const profile: BasicProfile = await idx.get(

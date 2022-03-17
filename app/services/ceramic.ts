@@ -13,13 +13,21 @@ const API_URL = "https://ceramic-clay.3boxlabs.com";
 declare global {
   interface Window {
     ethereum: any;
+    ceramic: CeramicClient;
+    idx: IDX;
   }
 }
 
 async function useCeramic() {
+  if (window.ethereum == null) {
+    throw new Error("No injected Ethereum provider");
+  }
+
   const [address] = await window.ethereum.request({
     method: "eth_requestAccounts",
   });
+
+  console.log(`Adress ${address}`);
 
   const ceramic = new CeramicClient(API_URL);
   const idx = new IDX({ ceramic });
@@ -41,7 +49,7 @@ async function useCeramic() {
 
   await did?.authenticate();
 
-  return [idx, address];
+  return { ceramic, idx, address };
 }
 
 export { BasicProfile, getLegacy3BoxProfileAsBasicProfile };

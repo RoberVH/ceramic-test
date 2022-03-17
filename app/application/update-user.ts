@@ -1,7 +1,11 @@
 import useCeramic, { BasicProfile } from "../services/ceramic";
 
-async function updateUser(payload: BasicProfile) {
-  const [idx, _] = await useCeramic();
+type PayloadType = {
+  avatar?: string;
+} & BasicProfile;
+
+async function updateUser(payload: PayloadType) {
+  const { idx } = await useCeramic();
 
   try {
     await idx.set("basicProfile", payload);

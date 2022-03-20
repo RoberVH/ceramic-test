@@ -3,21 +3,7 @@ import fetchUser from "../app/application/fetch-user";
 import fetch3boxProfile from "../app/application/fetch-3box-profile";
 import updateUser from "../app/application/update-user";
 
-// name?: string;
-// image?: ImageSources;
-// description?: string;
-// emoji?: string;
-// background?: ImageSources;
-// birthDate?: string;
-// url?: string;
-// gender?: string;
-// homeLocation?: string;
-// residenceCountry?: string;
-// nationalities?: Array<string>;
-// affiliations?: Array<string>;
-
 const Index = () => {
-  const [image, setImage] = React.useState(null);
   const [profile, setProfile] = React.useState(null);
 
   const dummyUpdate = async () => {
@@ -26,13 +12,15 @@ const Index = () => {
       description: "My new description",
       emoji: "🐝",
       birthDate: "1986-02-22",
-      url: "https://twitter.com/TiagoMoutinho12",
+      url: "https://github.com/tmoutinho",
       gender: "Male",
       residenceCountry: "PT",
       homeLocation: "Porto",
       nationalities: ["RO", "PL"],
       affiliations: ["CCC", "DDD", "EEE"],
-      avatar: image,
+      avatar:
+        "https://raw.githubusercontent.com/1Hive/dao-list/master/assets/1Hive/logo.png",
+      twitterUrl: "https://twitter.com/TiagoMoutinho12",
     });
 
     setProfile(null);
@@ -51,18 +39,6 @@ const Index = () => {
     >
       <h1>Ceramic Profile</h1>
 
-      <div
-        style={{
-          marginBottom: "20px",
-        }}
-      >
-        <h4>Set Image dummy to update</h4>
-        <input
-          type="text"
-          onChange={({ target: { value } }) => setImage(value)}
-        />
-      </div>
-
       {profile ? (
         <div
           style={{
@@ -75,6 +51,7 @@ const Index = () => {
           </h4>
           <p>{profile.description}</p>
           <p>{profile.url}</p>
+          <p>{profile.twitterUrl}</p>
         </div>
       ) : null}
 

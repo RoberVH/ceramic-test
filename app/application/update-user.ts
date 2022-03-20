@@ -2,6 +2,7 @@ import useCeramic, { BasicProfile } from "../services/ceramic";
 
 type PayloadType = {
   avatar?: string;
+  twitterUrl?: string;
 } & BasicProfile;
 
 async function updateUser(payload: PayloadType) {

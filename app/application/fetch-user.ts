@@ -13,6 +13,7 @@ async function fetchUser() {
     return profile;
   } catch (err) {
     console.log(`fetchUser`, err);
+    return err;
   }
 }
 

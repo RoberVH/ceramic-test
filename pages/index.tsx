@@ -3,26 +3,28 @@ import fetchUser from "../app/application/fetch-user";
 import fetch3boxProfile from "../app/application/fetch-3box-profile";
 import updateUser from "../app/application/update-user";
 
+// simple example on how to use the ceramic/idx profile
+
+const dummyUser = {
+  name: "Test name",
+  description: "My new description",
+  emoji: "🤔",
+  birthDate: "1986-02-22",
+  url: "https://github.com/tmoutinho",
+  gender: "Male",
+  residenceCountry: "PT",
+  homeLocation: "Test",
+  nationalities: ["RO", "PL"],
+  affiliations: ["CCC", "DDD", "EEE"],
+  avatar: "", // whatever image url
+  twitterUrl: "", // new twitter url
+};
+
 const Index = () => {
   const [profile, setProfile] = React.useState(null);
 
   const dummyUpdate = async () => {
-    await updateUser({
-      name: "Tiago",
-      description: "My new description",
-      emoji: "🐝",
-      birthDate: "1986-02-22",
-      url: "https://github.com/tmoutinho",
-      gender: "Male",
-      residenceCountry: "PT",
-      homeLocation: "Porto",
-      nationalities: ["RO", "PL"],
-      affiliations: ["CCC", "DDD", "EEE"],
-      avatar:
-        "https://raw.githubusercontent.com/1Hive/dao-list/master/assets/1Hive/logo.png",
-      twitterUrl: "https://twitter.com/TiagoMoutinho12",
-    });
-
+    await updateUser(dummyUser);
     setProfile(null);
   };
 

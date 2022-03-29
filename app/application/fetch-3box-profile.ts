@@ -12,7 +12,6 @@ async function fetch3boxProfile() {
     );
 
     console.log(`fetch3boxProfile`, profile);
-
     return profile;
   } catch (err) {
     console.log(`fetchUser`, err);

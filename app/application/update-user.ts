@@ -1,5 +1,6 @@
 import useCeramic, { BasicProfile } from "../services/ceramic";
 
+// extend basicProfile
 type PayloadType = {
   avatar?: string;
   twitterUrl?: string;
